@@ -17,6 +17,10 @@ class Screen(object):
 		self.applicationFlags = applicationFlags
 		self.datacontroller = datacontroller
 		
+		# Define colors
+		self.GKRed = '#b80000'
+		self.GKGreen = '#4cb359'
+		
 		# Instantiate GUI session
 		self.root = Tk()
 		
@@ -50,10 +54,10 @@ class Screen(object):
 		root.image = image #Keep image reference in memory
 		
 		#Buttons
-		exitButton = Button(self.root, text = "X", font = self.myFont, command = self.__exit, height = 1, width = 1, fg='#ffffff', bg='#ff0000', activebackground='#ff0000', highlightthickness=0, bd=0)
+		exitButton = Button(self.root, text = "X", font = self.myFont, command = self.__exit, height = 1, width = 1, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
 		exitButton.place(x=10, y=10)
 	
-		self.reverseButtonSelection = Button(self.root, text = "Reverse: OFF", font = self.myFont, command = self.reverseButtonPressed, height = 2, width = 14, fg='#ffffff', bg='#ff0000', activebackground='#ff0000', highlightthickness=0, bd=0)
+		self.reverseButtonSelection = Button(self.root, text = "Reverse: OFF", font = self.myFont, command = self.reverseButtonPressed, height = 2, width = 14, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
 		self.reverseButtonSelection.place(x=self.sWIDTH * 0.35, y=10)
 		
 		
@@ -65,16 +69,16 @@ class Screen(object):
 		isReverse = self.applicationFlags['reverse']
 		
 		if isReverse:
-			self.reverseButtonSelection.config(bg = '#00ff00')
-			self.reverseButtonSelection.config(activebackground = '#00ff00')
+			self.reverseButtonSelection.config(bg = self.GKGreen)
+			self.reverseButtonSelection.config(activebackground = self.GKGreen)
 			self.reverseButtonSelection.config(text = 'Reverse: ON')
 			
 			# Set reverse signal HIGH
 			self.datacontroller.write(4, GPIO.HIGH)
 			
 		else:
-			self.reverseButtonSelection.config(bg = '#ff0000')
-			self.reverseButtonSelection.config(activebackground = '#ff0000')
+			self.reverseButtonSelection.config(bg = self.GKRed)
+			self.reverseButtonSelection.config(activebackground = self.GKRed)
 			self.reverseButtonSelection.config(text = 'Reverse: OFF')
 		
 			# Set reverse signal LOW

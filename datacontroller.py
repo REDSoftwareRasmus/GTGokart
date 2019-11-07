@@ -8,9 +8,11 @@ class DataController():
 	def __init__(self):
 		GPIO.setmode(GPIO.BCM)
 		
-		self.dStream = serial.Serial("/dev/ttyACM0", 9600)
-		self.dStream.baudrate = 9600
-		
+		try: 
+			self.dStream = serial.Serial("/dev/ttyACM0", 9600)
+			self.dStream.baudrate = 9600
+		except:
+			print("Could not establish USB connection to Arduino")
 		
 	def write(self, PIN, SIGNAL):
 		
