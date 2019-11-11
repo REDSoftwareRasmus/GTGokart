@@ -1,6 +1,8 @@
 # Import modules
 import RPi.GPIO as GPIO
 import serial
+from JSONKeys import JSONKeys
+import json
 
 
 class DataController():
@@ -16,7 +18,9 @@ class DataController():
 			self.dStream.baudrate = 9600
 		except:
 			print("Could not establish connection to USB port ACM0")
-			
+
+
+
 	def write(self, PIN, SIGNAL):
 		
 		# Setup generic pin and output signal
@@ -26,6 +30,36 @@ class DataController():
 		print(PIN, SIGNAL, "Changed status")
 		
 		
-	def readSerial(self):
-		return self.dStream.read_all()
+		
+	def getData(self):
+	
+		observeData = True
+		
+		while observeData:
+			data = self.dStream.read_all()
+			
+			fIndex = None
+			lIndex = None
+			
+			for index in range(0,len(data)-1):
+				char = data[index]
+				
+				if char == '{':
+					fIndex = index
+					continue
+				if char == '}' and fIndex != None:
+					lIndex = index
+					break
+				
+			if fIndex != None and lIndex != None:
+				dataRange = data[fIndex:lIndex+1]
+				print(dataRange)
+				jsonData = json.loads(str(dataRange))
+				
+				print jsonData[JSONKeys.speed.value]
+				print jsonData[JSONKeys.temperature.value]
+				print jsonData[JSONKeys.voltage.value]
+				
+				#Interrupt while-loop
+				observeData = False
 		
