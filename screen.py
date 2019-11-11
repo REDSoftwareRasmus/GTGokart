@@ -11,10 +11,10 @@ class Screen(object):
 	
 	
 	# Methods
-	def __init__(self, applicationFlags, datacontroller, **kwargs):
+	def __init__(self, cartData, datacontroller, **kwargs):
 		
 		# Set 
-		self.applicationFlags = applicationFlags
+		self.cartData = cartData
 		self.datacontroller = datacontroller
 		
 		# Define colors
@@ -64,9 +64,9 @@ class Screen(object):
 	#MARK: Actions
 	def reverseButtonPressed(self):
 		
-		self.applicationFlags['reverse'] = not self.applicationFlags['reverse']
+		self.cartData['reverse'] = not self.cartData['reverse']
 		
-		isReverse = self.applicationFlags['reverse']
+		isReverse = self.cartData['reverse']
 		
 		if isReverse:
 			self.reverseButtonSelection.config(bg = self.GKGreen)
