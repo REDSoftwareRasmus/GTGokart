@@ -26,7 +26,7 @@ app = Screen(cartData, datacontroller)
 
 
 # Run
-print(datacontroller.getData())
+print(datacontroller.getData()) 
 app.run()
 
 

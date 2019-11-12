@@ -49,25 +49,26 @@ class Screen():
 		root.title("GTGokart")
 		
 		#Background canvas
-		canvas = Canvas(root, width = self.sWIDTH, height = self.sHEIGHT, bd=0, highlightthickness=0, relief='ridge')
-		canvas.pack()
+		self.canvas = Canvas(root, width = self.sWIDTH, height = self.sHEIGHT, bd=0, highlightthickness=0, relief='ridge')
+		self.canvas.pack()
 		
 		
-        #Image
+        #STATIC
 		bg_image = self.getImage("gui-background.jpeg", self.sWIDTH*2, self.sHEIGHT*2)
-		bg_image_CANVAS = canvas.create_image(0, 0, image = bg_image)
+		self.canvas.create_image(0, 0, image = bg_image)
 		root.bg_image = bg_image
 		
 		velInd_image_1 = self.getImage("gokart-panel-layer-1.png", 480, 500)
-		canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_1)
+		self.canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_1)
 		root.velInd_image_1 = velInd_image_1
 		
+		#DYNAMIC
 		velInd_image_2 = self.getImage("gokart-panel-layer-2.png", 480, 500, 0)
-		canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_2)
+		self.canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_2)
 		root.velInd_image_2 = velInd_image_2	
 		
-		canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.7, font=self.velFont1, text="20", fill='#ffffff')
-		canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.83, font=self.velFont2, text="km/h", fill='#ffffff')
+		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.7, font=self.velFont1, text="20", fill='#ffffff')
+		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.83, font=self.velFont2, text="km/h", fill='#ffffff')
 		
 		
 		#Buttons

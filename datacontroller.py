@@ -63,7 +63,12 @@ class DataController():
 				
 			if fIndex != None and lIndex != None:
 				dataRange = data[fIndex:lIndex+1]
-				jsonData = json.loads(str(dataRange))
+				
+				try: 
+					jsonData = json.loads(str(dataRange))
+				except ValueError:
+					print("No JSON object could be loaded")
+					return None
 				
 				#Interrupt while-loop
 				observeData = False
