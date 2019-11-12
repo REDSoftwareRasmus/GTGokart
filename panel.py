@@ -15,7 +15,7 @@ cartData = {
 
 # Methods	
 def beginDataObservation(self):
-    
+    pass
 	
 	
 # Setup
@@ -26,7 +26,7 @@ app = Screen(cartData, datacontroller)
 
 
 # Run
-datacontroller.getData()
+print(datacontroller.getData())
 app.run()
 
 

@@ -39,8 +39,15 @@ class DataController():
 		
         #Tap in and observe data stream
 		while observeData:
-			data = self.dStream.read_all()
 			
+			#Get data from Serial read
+			try:
+				data = self.dStream.read_all()
+			except AttributeError:
+				print("No dStream created since USB port connection could not be established")
+				return None
+			
+			#Extract JSON oject
 			fIndex = None
 			lIndex = None
 			
@@ -56,7 +63,6 @@ class DataController():
 				
 			if fIndex != None and lIndex != None:
 				dataRange = data[fIndex:lIndex+1]
-				print(dataRange)
 				jsonData = json.loads(str(dataRange))
 				
 				#Interrupt while-loop
