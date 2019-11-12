@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO
 import serial
 from JSONKeys import JSONKeys
 import json
+import threading
 
 
 class DataController():
@@ -29,12 +30,14 @@ class DataController():
 		
 		print(PIN, SIGNAL, "Changed status")
 		
-		
-		
+    
+    
 	def getData(self):
 	
+        #Observe data flag
 		observeData = True
 		
+        #Tap in and observe data stream
 		while observeData:
 			data = self.dStream.read_all()
 			
@@ -56,10 +59,8 @@ class DataController():
 				print(dataRange)
 				jsonData = json.loads(str(dataRange))
 				
-				print jsonData[JSONKeys.speed.value]
-				print jsonData[JSONKeys.temperature.value]
-				print jsonData[JSONKeys.voltage.value]
-				
 				#Interrupt while-loop
 				observeData = False
+    
+                return jsonData
 		

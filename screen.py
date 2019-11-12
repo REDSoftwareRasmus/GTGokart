@@ -10,25 +10,31 @@ class Screen(object):
 	# Properties
 	
 	
+    
 	# Methods
+ 
+    # MARK: Setup
 	def __init__(self, cartData, datacontroller, **kwargs):
 		
 		# Set 
 		self.cartData = cartData
 		self.datacontroller = datacontroller
 		
-		# Define colors
+        # Define colors
 		self.GKRed = '#b80000'
 		self.GKGreen = '#4cb359'
-		
+
+        self.sWIDTH =  self.root.winfo_screenwidth()
+        self.sHEIGHT = self.root.winfo_screenheight()
+        
+        self.myFont = tkFont.Font(root = self.root, family = "Helvetica", size = 20, weight = "bold")
+
+
 		# Instantiate GUI session
 		self.root = Tk()
-		
-		self.sWIDTH =  self.root.winfo_screenwidth()
-		self.sHEIGHT = self.root.winfo_screenheight()
-		
-		self.myFont = tkFont.Font(root = self.root, family = "Helvetica", size = 20, weight = "bold")
-						
+
+	
+    
 	def __setupScreen(self, root):
 		pad = 3
 		self._geom = '200x200+0+0'
@@ -38,6 +44,7 @@ class Screen(object):
 						
 		root.wm_attributes('-fullscreen', 'true')
 		
+        
 	def __setupGUI(self, root):
 		
 		root.title("GTGokart")
@@ -46,12 +53,17 @@ class Screen(object):
 		canvas = Canvas(root, width = self.sWIDTH, height = self.sHEIGHT, bd=0, highlightthickness=0, relief='ridge')
 		canvas.pack()
 		
-		#Background image
-		pilImage = Image.open('gui-background.jpeg')
-		pilImage = pilImage.resize((self.sWIDTH*2, self.sHEIGHT*2), Image.ANTIALIAS)
-		image = ImageTk.PhotoImage(pilImage)
-		imagesprite = canvas.create_image(0, 0, image = image)
-		root.image = image #Keep image reference in memory
+		
+        #Images
+		#pilImage = Image.open('gui-background.jpeg')
+		#pilImage = pilImage.resize((self.sWIDTH*2, self.sHEIGHT*2), Image.ANTIALIAS)
+		#image = ImageTk.PhotoImage(pilImage)
+		
+        #Keep image reference in memory
+        bg_image = getImage('gui-background.jpeg', self.sWIDTH*2, self.sHEIGHT*2)
+        bg_image_CANVAS = canvas.create_image(0, 0, image = bg_image)
+		root.bg_image = image
+        
 		
 		#Buttons
 		exitButton = Button(self.root, text = "X", font = self.myFont, command = self.__exit, height = 1, width = 1, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
@@ -61,6 +73,17 @@ class Screen(object):
 		self.reverseButtonSelection.place(x=self.sWIDTH * 0.35, y=10)
 		
 		
+        
+    #MARK: GUI Creation
+    def getImage(self, name, width, height):
+        pilImage = Image.open(name)
+        pilImage = pilImage.resize((width, height), Image.ANTIALIAS)
+        image = ImageTk.PhotoImage(pilImage)
+        
+        return image
+  
+  
+  
 	#MARK: Actions
 	def reverseButtonPressed(self):
 		
@@ -84,6 +107,8 @@ class Screen(object):
 			# Set reverse signal LOW
 			self.datacontroller.write(4, GPIO.LOW)
 		
+        
+        
 	#MARK: Sys actions
 	def run(self):
 		
