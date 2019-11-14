@@ -14,8 +14,11 @@ cartData = {
 }
 
 # Methods	
-def beginDataObservation(self):
+def beginDataObservation( ):
     pass
+	
+def updateUI():
+	pass
 	
 	
 # Setup
