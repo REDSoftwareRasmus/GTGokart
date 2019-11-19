@@ -1,7 +1,7 @@
 from enum import Enum
 
 class JSONKeys(Enum):
-	speed = "speed"
+	velocity = "velocity"
 	temperature = "temp"
 	battery = "battery"
 	reverse = "reverse"

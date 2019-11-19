@@ -3,6 +3,7 @@ from Tkinter import *
 from PIL import Image, ImageTk
 import tkFont
 import RPi.GPIO as GPIO
+from JSONKeys import JSONKeys
 
 
 class Screen():
@@ -75,10 +76,10 @@ class Screen():
 		self.canvas.create_image(self.sWIDTH*0.95, self.sHEIGHT*0.6, image=bar_bg_2)
 		root.bar_bg_2 = bar_bg_2
 		
+		self.setDynamicUI(self.cartData)
+		
 		self.canvas.create_text(self.sWIDTH*0.05, self.sHEIGHT*0.95, font=self.barFont1, text="%", fill='#ffffff')
 		self.canvas.create_text(self.sWIDTH*0.95, self.sHEIGHT*0.95, font=self.barFont2, text="C", fill='#ffffff')
-		
-		self.setDynamicUI(self.cartData)
 		
 		#Buttons
 		exitButton = Button(self.root, text = "X", font = self.myFont, command = self.__exit, height = 1, width = 1, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
@@ -99,27 +100,34 @@ class Screen():
   
   
 	#MARK: Actions
-	def setDynamicUI(self, cartdata):
+	def setDynamicUI(self, cartData):
 		
 		#Get data
+		txt_temp = str(cartData[JSONKeys.temperature.value])
+		txt_battery = str(cartData[JSONKeys.battery.value])
+		txt_velocity = str(cartData[JSONKeys.velocity.value])
+		velInd_rotation = round((cartData[JSONKeys.velocity.value] / 30.0) * -247)
+		
+		battery_Y = (self.sHEIGHT*0.6)*(1+(1-(cartData[JSONKeys.battery.value]/100.0)))
+		temp_Y = (self.sHEIGHT*0.6)*(1+(1-(cartData[JSONKeys.temperature.value]/65.0)))
 		
 		#Setup dynamic UI
-		velInd_image_2 = self.getImage("gokart-panel-layer-2.png", 480, 500, 0)
+		velInd_image_2 = self.getImage("gokart-panel-layer-2.png", 480, 500, velInd_rotation)
 		self.canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_2)
 		self.root.velInd_image_2 = velInd_image_2	
 		
-		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.7, font=self.velFont1, text="20", fill='#ffffff')
+		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.7, font=self.velFont1, text=txt_velocity, fill='#ffffff')
 		
 		bar_battery = self.getImage("battery-bar.png", 95, 400)
-		self.canvas.create_image(self.sWIDTH*0.05, self.sHEIGHT*0.6, image=bar_battery)
+		self.canvas.create_image(self.sWIDTH*0.05, battery_Y, image=bar_battery)
 		self.root.bar_battery = bar_battery
 		
 		bar_temp = self.getImage("heat-bar.png", 95, 400)
-		self.canvas.create_image(self.sWIDTH*0.95, self.sHEIGHT*0.6, image=bar_temp)
+		self.canvas.create_image(self.sWIDTH*0.95, temp_Y, image=bar_temp)
 		self.root.bar_temp = bar_temp
 		
-		self.canvas.create_text(self.sWIDTH*0.05, self.sHEIGHT*0.4, font=self.barFont1, text="99", fill='#ffffff')
-		self.canvas.create_text(self.sWIDTH*0.95, self.sHEIGHT*0.4, font=self.barFont1, text="25", fill='#ffffff')
+		self.canvas.create_text(self.sWIDTH*0.05, battery_Y-(self.sHEIGHT*0.2), font=self.barFont1, text=txt_battery, fill='#ffffff')
+		self.canvas.create_text(self.sWIDTH*0.95, temp_Y-(self.sHEIGHT*0.2), font=self.barFont1, text=txt_temp, fill='#ffffff')
 		
 	
 	def reverseButtonPressed(self):
@@ -158,6 +166,7 @@ class Screen():
 	
 	def __exit(self):
 		print("ACTION: Program exit request")
+		
 		GPIO.cleanup()
 		self.root.quit()
 		self.updateTimer.cancel()

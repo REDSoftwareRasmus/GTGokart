@@ -8,15 +8,18 @@ import threading
 # Define global
 cartData = {
 	JSONKeys.reverse.value : False,
-    JSONKeys.speed.value : 0,
-    JSONKeys.temperature.value : 0,
-    JSONKeys.battery.value : 0
+    JSONKeys.velocity.value : 28,
+    JSONKeys.temperature.value : 45,
+    JSONKeys.battery.value : 100
 }
 
 
 
 # Methods	
-def observeData( ):
+def observeData():
+	print("mf")
+	#Set timer for update
+	updateTimer = threading.Timer(1, observeData).start()
 	
 	#Get data
 	jsonData = datacontroller.getData()
@@ -25,9 +28,8 @@ def observeData( ):
 		print("Data request returned None")
 		return	
 		
-    
     #Update data in local cart data
-	cartData[JSONKeys.speed.value] = jsonData[JSONKeys.speed.value]
+	cartData[JSONKeys.velocity.value] = jsonData[JSONKeys.velocity.value]
 	cartData[JSONKeys.battery.value] = jsonData[JSONKeys.battery.value]
 	cartData[JSONKeys.temperature.value] = jsonData[JSONKeys.temperature.value]
 	
