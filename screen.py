@@ -14,12 +14,13 @@ class Screen():
 	# Methods
 
 	# MARK: Setup
-	def __init__(self, cartData, datacontroller, **kwargs):
+	def __init__(self, cartData, datacontroller, updateTimer, **kwargs):
 		
 		#Instantiate root session
 		self.root = Tk()
 		
 		# Set 
+		self.updateTimer = updateTimer
 		self.cartData = cartData
 		self.datacontroller = datacontroller
 		
@@ -64,6 +65,8 @@ class Screen():
 		self.canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_1)
 		root.velInd_image_1 = velInd_image_1
 		
+		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.83, font=self.velFont2, text="km/h", fill='#ffffff')
+		
 		bar_bg_1 = self.getImage("bar-background.png", 100, 400)
 		self.canvas.create_image(self.sWIDTH*0.05, self.sHEIGHT*0.6, image=bar_bg_1)
 		root.bar_bg_1 = bar_bg_1
@@ -72,28 +75,10 @@ class Screen():
 		self.canvas.create_image(self.sWIDTH*0.95, self.sHEIGHT*0.6, image=bar_bg_2)
 		root.bar_bg_2 = bar_bg_2
 		
-		#DYNAMIC
-		velInd_image_2 = self.getImage("gokart-panel-layer-2.png", 480, 500, 0)
-		self.canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_2)
-		root.velInd_image_2 = velInd_image_2	
-		
-		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.7, font=self.velFont1, text="20", fill='#ffffff')
-		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.83, font=self.velFont2, text="km/h", fill='#ffffff')
-		
-		bar_battery = self.getImage("battery-bar.png", 95, 400)
-		self.canvas.create_image(self.sWIDTH*0.05, self.sHEIGHT*0.6, image=bar_battery)
-		root.bar_battery = bar_battery
-		
-		bar_temp = self.getImage("heat-bar.png", 95, 400)
-		self.canvas.create_image(self.sWIDTH*0.95, self.sHEIGHT*0.6, image=bar_temp)
-		root.bar_temp = bar_temp
-		
-		self.canvas.create_text(self.sWIDTH*0.05, self.sHEIGHT*0.4, font=self.barFont1, text="99", fill='#ffffff')
-		self.canvas.create_text(self.sWIDTH*0.95, self.sHEIGHT*0.4, font=self.barFont1, text="25", fill='#ffffff')
-		
 		self.canvas.create_text(self.sWIDTH*0.05, self.sHEIGHT*0.95, font=self.barFont1, text="%", fill='#ffffff')
 		self.canvas.create_text(self.sWIDTH*0.95, self.sHEIGHT*0.95, font=self.barFont2, text="C", fill='#ffffff')
 		
+		self.setDynamicUI(self.cartData)
 		
 		#Buttons
 		exitButton = Button(self.root, text = "X", font = self.myFont, command = self.__exit, height = 1, width = 1, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
@@ -114,6 +99,29 @@ class Screen():
   
   
 	#MARK: Actions
+	def setDynamicUI(self, cartdata):
+		
+		#Get data
+		
+		#Setup dynamic UI
+		velInd_image_2 = self.getImage("gokart-panel-layer-2.png", 480, 500, 0)
+		self.canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_image_2)
+		self.root.velInd_image_2 = velInd_image_2	
+		
+		self.canvas.create_text(self.sWIDTH*0.5, self.sHEIGHT*0.7, font=self.velFont1, text="20", fill='#ffffff')
+		
+		bar_battery = self.getImage("battery-bar.png", 95, 400)
+		self.canvas.create_image(self.sWIDTH*0.05, self.sHEIGHT*0.6, image=bar_battery)
+		self.root.bar_battery = bar_battery
+		
+		bar_temp = self.getImage("heat-bar.png", 95, 400)
+		self.canvas.create_image(self.sWIDTH*0.95, self.sHEIGHT*0.6, image=bar_temp)
+		self.root.bar_temp = bar_temp
+		
+		self.canvas.create_text(self.sWIDTH*0.05, self.sHEIGHT*0.4, font=self.barFont1, text="99", fill='#ffffff')
+		self.canvas.create_text(self.sWIDTH*0.95, self.sHEIGHT*0.4, font=self.barFont1, text="25", fill='#ffffff')
+		
+	
 	def reverseButtonPressed(self):
 		
 		self.cartData['reverse'] = not self.cartData['reverse']
@@ -152,6 +160,7 @@ class Screen():
 		print("ACTION: Program exit request")
 		GPIO.cleanup()
 		self.root.quit()
+		self.updateTimer.cancel()
 		
 		import sys
 		sys.exit()
