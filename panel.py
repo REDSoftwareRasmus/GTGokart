@@ -3,12 +3,13 @@ from screen import Screen
 from datacontroller import DataController
 from JSONKeys import JSONKeys
 import threading
+import time
 
 
 # Define global
 cartData = {
 	JSONKeys.reverse.value : False,
-    JSONKeys.velocity.value : 28,
+    JSONKeys.velocity.value : 12,
     JSONKeys.temperature.value : 45,
     JSONKeys.battery.value : 100
 }
@@ -16,10 +17,20 @@ cartData = {
 
 
 # Methods	
+def bootup():
+	for x in range(1,11):
+		print "...",
+		print str(x*10),
+		print "%"
+		time.sleep(0.1)
+
+
 def observeData():
-	print("mf")
-	#Set timer for update
-	updateTimer = threading.Timer(1, observeData).start()
+	
+	#Set timer for data observation update
+	updateTimer = threading.Timer(1, observeData)
+	updateTimer.setDaemon(True) #Set to daemon in order to kill this thread when main thread is exited
+	updateTimer.start()
 	
 	#Get data
 	jsonData = datacontroller.getData()
@@ -34,17 +45,17 @@ def observeData():
 	cartData[JSONKeys.temperature.value] = jsonData[JSONKeys.temperature.value]
 	
 	#Update UI
-	app.updateUI(cartData)
+	app.setDynamicUI(cartData)
     
 
 #Setup
+print("Booting up...")
 datacontroller = DataController()
-updateTimer = threading.Timer(1, observeData)
-app = Screen(cartData, datacontroller, updateTimer)
+app = Screen(cartData, datacontroller)
 
 
 #Run
-print(datacontroller.getData()) 
-updateTimer.start()
+observeData()
+bootup()
 app.run()
 
