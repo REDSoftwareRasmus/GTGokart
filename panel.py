@@ -37,6 +37,7 @@ def observeData():
 	
 	if jsonData == None:
 		print("Data request returned None")
+		updateTimer.cancel()
 		return	
 		
     #Update data in local cart data

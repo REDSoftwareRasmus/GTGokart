@@ -51,7 +51,25 @@ class Screen():
 						root.winfo_screenheight()-pad))
 						
 		root.wm_attributes('-fullscreen', 'true')
+	
+	def clickEvent(self, event):
 		
+		#Click coors
+		x = event.x
+		y = event.y
+		
+		#Get click trigger widget frame bounds
+		exitButtonBounds = self.canvas.bbox(self.exitButton)
+		reverseButtonBounds = self.canvas.bbox(self.reverseButton)
+		
+		#Check click trigger in frame
+		if x > exitButtonBounds[0] and x < exitButtonBounds[2] and y > exitButtonBounds[1] and y < exitButtonBounds[3]:
+			self.__exit()
+			
+		
+		if x > reverseButtonBounds[0] and x < reverseButtonBounds[2] and y > reverseButtonBounds[1] and y < reverseButtonBounds[3]:
+			self.reverseButtonPressed()
+			
         
 	def __setupGUI(self, root):
 		
@@ -60,6 +78,9 @@ class Screen():
 		#Background canvas
 		self.canvas = Canvas(root, width = self.sWIDTH, height = self.sHEIGHT, bd=0, highlightthickness=0, relief='ridge')
 		self.canvas.pack()
+		
+		#Add canvas events
+		self.canvas.bind('<Button-1>', self.clickEvent)
 		
         #Setup static UI
 		bg_image = self.getImage("gui-background.jpeg", self.sWIDTH*2, self.sHEIGHT*2)
@@ -103,14 +124,14 @@ class Screen():
 		
 		
 		#Buttons
-		exitButtonImage = self.getImage("close-button.png", 40, 40)
-		exitButton = Button(self.root, command = self.__exit, height = 40, width = 40, image=exitButtonImage, highlightthickness=0, bd=0)
-		exitButton.image = exitButtonImage
-		exitButton.place(x=10, y=10)
+		exitButtonImage = self.getImage("close-button.gif", 70, 70)
+		self.exitButton = self.canvas.create_image(45, 45, image=exitButtonImage)
+		self.root.exitButton = exitButtonImage
 		
-		self.reverseButtonSelection = Button(self.root, text = "Reverse: OFF", font = self.myFont, command = self.reverseButtonPressed, height = 2, width = 14, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
-		self.reverseButtonSelection.place(x=self.sWIDTH * 0.35, y=10)
-        
+		reverseButtonImage = self.getImage("rev-button-off.gif", 300, 85)
+		self.reverseButton = self.canvas.create_image(self.sWIDTH * 0.5, 50, image=reverseButtonImage)
+		self.root.reverseButton = reverseButtonImage
+		        
         
 	#MARK: GUI Creation
 	def getImage(self, name, width, height, rotation=0):
@@ -168,17 +189,17 @@ class Screen():
 		isReverse = self.cartData['reverse']
 		
 		if isReverse:
-			self.reverseButtonSelection.config(bg = self.GKGreen)
-			self.reverseButtonSelection.config(activebackground = self.GKGreen)
-			self.reverseButtonSelection.config(text = 'Reverse: ON')
+			reverseButtonImage = self.getImage("rev-button-on.gif", 300, 85)
+			self.canvas.itemconfig(self.reverseButton, image=reverseButtonImage)
+			self.root.reverseButton = reverseButtonImage
 			
 			# Set reverse signal HIGH
 			self.datacontroller.write(4, GPIO.HIGH)
 			
 		else:
-			self.reverseButtonSelection.config(bg = self.GKRed)
-			self.reverseButtonSelection.config(activebackground = self.GKRed)
-			self.reverseButtonSelection.config(text = 'Reverse: OFF')
+			reverseButtonImage = self.getImage("rev-button-off.gif", 300, 85)
+			self.canvas.itemconfig(self.reverseButton, image=reverseButtonImage)
+			self.root.reverseButton = reverseButtonImage
 		
 			# Set reverse signal LOW
 			self.datacontroller.write(4, GPIO.LOW)
