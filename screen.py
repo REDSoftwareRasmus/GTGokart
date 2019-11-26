@@ -103,7 +103,9 @@ class Screen():
 		
 		
 		#Buttons
-		exitButton = Button(self.root, text = "X", font = self.myFont, command = self.__exit, height = 1, width = 1, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
+		exitButtonImage = self.getImage("close-button.png", 40, 40)
+		exitButton = Button(self.root, command = self.__exit, height = 40, width = 40, image=exitButtonImage, highlightthickness=0, bd=0)
+		exitButton.image = exitButtonImage
 		exitButton.place(x=10, y=10)
 		
 		self.reverseButtonSelection = Button(self.root, text = "Reverse: OFF", font = self.myFont, command = self.reverseButtonPressed, height = 2, width = 14, fg='#ffffff', bg=self.GKRed, activebackground=self.GKRed, highlightthickness=0, bd=0)
