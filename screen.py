@@ -76,6 +76,10 @@ class Screen():
 		self.canvas.create_image(self.sWIDTH*0.95, self.sHEIGHT*0.6, image=bar_bg_2)
 		root.bar_bg_2 = bar_bg_2
 		
+		radio_icon_image = self.getImage("music-button.png", 60, 60)
+		self.radio_icon = self.canvas.create_image(self.sWIDTH-40, 40, image=radio_icon_image)
+		self.root.radio_icon = radio_icon_image
+		
 		#Setup dynamic UI
 		velInd_2_image = self.getImage("gokart-panel-layer-2.png", 480, 500, 0)
 		self.velInd_2 = self.canvas.create_image(self.sWIDTH*0.5, self.sHEIGHT*0.73, image=velInd_2_image)
@@ -191,7 +195,9 @@ class Screen():
 		#self.cartData[JSONKeys.battery.value] -= 40
 		#self.cartData[JSONKeys.temperature.value] -= 25
 		#self.setDynamicUI(self.cartData)
-        
+		
+	def openMusicController(self):
+		print("Open music controller")
         
 	def clickEvent(self, event):
 		
@@ -202,6 +208,7 @@ class Screen():
 		#Get click trigger widget frame bounds
 		exitButtonBounds = self.canvas.bbox(self.exitButton)
 		reverseButtonBounds = self.canvas.bbox(self.reverseButton)
+		radioButtonBounds = self.canvas.bbox(self.radio_icon)
 		
 		#Check click trigger in frame
 		if x > exitButtonBounds[0] and x < exitButtonBounds[2] and y > exitButtonBounds[1] and y < exitButtonBounds[3]:
@@ -209,7 +216,12 @@ class Screen():
 			
 		
 		if x > reverseButtonBounds[0] and x < reverseButtonBounds[2] and y > reverseButtonBounds[1] and y < reverseButtonBounds[3]:
-			self.reverseButtonPressed()       
+			self.reverseButtonPressed()    
+			
+			
+		if x > radioButtonBounds[0] and x < radioButtonBounds[2] and y > radioButtonBounds[1] and y < radioButtonBounds[3]:
+			self.openMusicController()
+			
        
 	#MARK: Sys actions
 	def run(self):	
