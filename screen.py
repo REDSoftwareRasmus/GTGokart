@@ -8,12 +8,6 @@ from JSONKeys import JSONKeys
 
 class Screen():
 	
-	# Properties
-
-
-
-	# Methods
-
 	# MARK: Setup
 	def __init__(self, cartData, datacontroller, **kwargs):
 		
@@ -52,25 +46,6 @@ class Screen():
 						
 		root.wm_attributes('-fullscreen', 'true')
 	
-	def clickEvent(self, event):
-		
-		#Click coors
-		x = event.x
-		y = event.y
-		
-		#Get click trigger widget frame bounds
-		exitButtonBounds = self.canvas.bbox(self.exitButton)
-		reverseButtonBounds = self.canvas.bbox(self.reverseButton)
-		
-		#Check click trigger in frame
-		if x > exitButtonBounds[0] and x < exitButtonBounds[2] and y > exitButtonBounds[1] and y < exitButtonBounds[3]:
-			self.__exit()
-			
-		
-		if x > reverseButtonBounds[0] and x < reverseButtonBounds[2] and y > reverseButtonBounds[1] and y < reverseButtonBounds[3]:
-			self.reverseButtonPressed()
-			
-        
 	def __setupGUI(self, root):
 		
 		root.title("GTGokart")
@@ -122,10 +97,17 @@ class Screen():
 		self.canvas.create_text(self.sWIDTH*0.05, self.sHEIGHT*0.95, font=self.barFont1, text="%", fill='#ffffff')
 		self.canvas.create_text(self.sWIDTH*0.95, self.sHEIGHT*0.95, font=self.barFont2, text="C", fill='#ffffff')
 		
+		brake_icon_image = self.getImage("brake-indicator-gray.png", 40, 40)
+		self.brake_icon = self.canvas.create_image(self.sWIDTH*0.46, self.sHEIGHT*0.95, image=brake_icon_image)
+		self.root.brake_icon = brake_icon_image
+		
+		park_icon_image = self.getImage("park-indicator-gray.png", 40, 40)
+		self.park_icon = self.canvas.create_image(self.sWIDTH*0.54, self.sHEIGHT*0.95, image=park_icon_image)
+		self.root.park_icon = park_icon_image
 		
 		#Buttons
 		exitButtonImage = self.getImage("close-button.gif", 70, 70)
-		self.exitButton = self.canvas.create_image(45, 45, image=exitButtonImage)
+		self.exitButton = self.canvas.create_image(35, 35, image=exitButtonImage)
 		self.root.exitButton = exitButtonImage
 		
 		reverseButtonImage = self.getImage("rev-button-off.gif", 300, 85)
@@ -211,6 +193,24 @@ class Screen():
 		#self.setDynamicUI(self.cartData)
         
         
+	def clickEvent(self, event):
+		
+		#Click coors
+		x = event.x
+		y = event.y
+		
+		#Get click trigger widget frame bounds
+		exitButtonBounds = self.canvas.bbox(self.exitButton)
+		reverseButtonBounds = self.canvas.bbox(self.reverseButton)
+		
+		#Check click trigger in frame
+		if x > exitButtonBounds[0] and x < exitButtonBounds[2] and y > exitButtonBounds[1] and y < exitButtonBounds[3]:
+			self.__exit()
+			
+		
+		if x > reverseButtonBounds[0] and x < reverseButtonBounds[2] and y > reverseButtonBounds[1] and y < reverseButtonBounds[3]:
+			self.reverseButtonPressed()       
+       
 	#MARK: Sys actions
 	def run(self):	
 		self.root.mainloop()
@@ -230,12 +230,17 @@ class Screen():
 	
 	
 #SIGNAL
-	#Back button
+	#Reverse button
 	#Motor temperature warning
+	
 	#Collision warning
+	#Manual brake
 
 #DATA
 	#Velocity label
 	#Motor temperature label
+	
+	
+#RADIO
 
 

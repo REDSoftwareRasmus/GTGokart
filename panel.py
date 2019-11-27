@@ -36,8 +36,8 @@ def observeData():
 	jsonData = datacontroller.getData()
 	
 	if jsonData == None:
-		print("Data request returned None")
 		updateTimer.cancel()
+		dataAccessFailure()
 		return	
 		
     #Update data in local cart data
@@ -48,6 +48,11 @@ def observeData():
 	#Update UI
 	app.setDynamicUI(cartData)
     
+    
+def dataAccessFailure():
+	print("Data request returned None")
+
+
 
 #Setup
 print("Booting up...")
