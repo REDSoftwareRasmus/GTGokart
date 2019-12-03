@@ -4,9 +4,13 @@ from PIL import Image, ImageTk
 import tkFont
 import RPi.GPIO as GPIO
 from JSONKeys import JSONKeys
+from musiccontroller import MusicController
 
 
 class Screen():
+	
+	#Properties
+	musicframe_hidden = True
 	
 	# MARK: Setup
 	def __init__(self, cartData, datacontroller, **kwargs):
@@ -17,6 +21,7 @@ class Screen():
 		# Set 
 		self.cartData = cartData
 		self.datacontroller = datacontroller
+		self.musiccontroller = MusicController(self)
 		
         # Define colors
 		self.GKRed = '#b80000'
@@ -118,6 +123,12 @@ class Screen():
 		self.reverseButton = self.canvas.create_image(self.sWIDTH * 0.5, 50, image=reverseButtonImage)
 		self.root.reverseButton = reverseButtonImage
 		        
+		#Setup music controller
+		self.musicframe = Frame(self.root)
+		self.musiccanvas = Canvas(self.musicframe, width = self.sWIDTH*0.5, height = self.sHEIGHT, background='black')
+		self.musiccanvas.pack(side="left")
+		self.canvas.create_window(self.sWIDTH*0.25,self.sHEIGHT*0.5,window=self.musicframe)
+		self.musicframe.lower(self.canvas)
         
 	#MARK: GUI Creation
 	def getImage(self, name, width, height, rotation=0):
@@ -197,12 +208,22 @@ class Screen():
 		#self.setDynamicUI(self.cartData)
 		
 	def openMusicController(self):
-		print("Open music controller")
-		from pygame import mixer
-		mixer.init()
-		mixer.music.load("kungfu.mp3")
-		mixer.music.set_volume(1.0)
-		mixer.music.play()
+		
+		self.musiccontroller.play(0)
+		
+		if self.musicframe_hidden:
+			self.musicframe_hidden = False
+			self.musiccontroller.unpause()
+			self.musicframe.lift(self.canvas)
+			
+		else: 
+			self.closeMusicController()
+			self.musiccontroller.pause()
+			
+	def closeMusicController(self):
+		self.musicframe_hidden = True
+		self.musicframe.lower(self.canvas)
+		
         
 	def clickEvent(self, event):
 		
