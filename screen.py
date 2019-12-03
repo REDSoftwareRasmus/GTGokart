@@ -198,6 +198,11 @@ class Screen():
 		
 	def openMusicController(self):
 		print("Open music controller")
+		from pygame import mixer
+		mixer.init()
+		mixer.music.load("kungfu.mp3")
+		mixer.music.set_volume(1.0)
+		mixer.music.play()
         
 	def clickEvent(self, event):
 		

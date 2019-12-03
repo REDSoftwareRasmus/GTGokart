@@ -10,7 +10,7 @@ import time
 cartData = {
 	JSONKeys.reverse.value : False,
 	JSONKeys.brake.value : False,
-    JSONKeys.velocity.value : 12,
+    JSONKeys.velocity.value : 21,
     JSONKeys.temperature.value : 45,
     JSONKeys.battery.value : 100
 }
