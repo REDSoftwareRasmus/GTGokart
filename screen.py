@@ -11,6 +11,7 @@ class Screen():
 	
 	#Properties
 	musicframe_hidden = True
+	trackButtons = []
 	
 	# MARK: Setup
 	def __init__(self, cartData, datacontroller, **kwargs):
@@ -31,7 +32,8 @@ class Screen():
 		self.sHEIGHT = self.root.winfo_screenheight()
 		
 		# Set fonts
-		self.myFont = tkFont.Font(root = self.root, family = "Beantown", size = 20, weight = "bold")
+		self.myFont = tkFont.Font(root = self.root, family = "Beantown", size = 10, weight = "bold")
+		self.closeFont = tkFont.Font(root = self.root, family = "Beantown", size = 20, weight = "bold")
 		self.velFont1 = tkFont.Font(root = self.root, family = "Beantown", size = 60, weight = "bold")
 		self.velFont2 = tkFont.Font(root = self.root, family = "Beantown", size = 20)
 		self.barFont1 = tkFont.Font(root = self.root, family = "Beantown", size = 17, weight = "bold")
@@ -139,16 +141,33 @@ class Screen():
 		
 	def setupMusicController(self):
 		
-		self.musicCloseButton = Button(self.musicframe, text="X", foreground="#ffffff", bd=0, command=self.openMusicController, font=self.myFont, bg="#000000", highlightthickness=0, highlightcolor="#ff0000")
+		#Close button
+		self.musicCloseButton = Button(self.musicframe, text="X", foreground="#ffffff", bd=0, command=self.openMusicController, font=self.closeFont, bg="#000000", highlightthickness=0, highlightcolor="#ff0000")
 		self.musicCloseButton.place(x=10, y=10)
 		
+		#Track list menu		
 		for trackIndex in range(0, len(self.musiccontroller.tracks)):
-			track = self.musiccontroller.tracks[trackIndex]
+			track = self.musiccontroller.trackNames[trackIndex]
 			#self.musiccontroller.unload()
-			newButton = Button(self.musicframe, text=track,fg="white", bg="black", bd=2, command= lambda: self.musiccontroller.play(trackIndex), height=2, width=10)
-			newButton.place(x=self.sWIDTH*0.75, y=50+trackIndex*70)
+			newButton = Button(self.musicframe, font=self.myFont, text=track,fg="white", bg="black", bd=2, command= lambda trackIndex = trackIndex: self.musicButtonPressed(trackIndex), height=3, width=35, anchor="w")
+			newButton.place(x=self.sWIDTH*0.55, y=30+trackIndex*77)
+			self.trackButtons.append(newButton)
 			
-  
+	def musicButtonPressed(self, trackIndex):
+		
+		#Play track
+		self.musiccontroller.play(trackIndex)
+		
+		#Update gui for track selection
+		for buttonIndex in range(0, len(self.trackButtons)):
+			button = self.trackButtons[buttonIndex]
+			if buttonIndex == trackIndex:
+				button.config(highlightbackground=self.GKGreen)
+				button.config(fg=self.GKGreen)
+			else:
+				button.config(highlightbackground="white")
+				button.config(fg="white")
+		
 	def setDynamicUI(self, cartData):
 		
 		#Get and calculate data
@@ -226,9 +245,7 @@ class Screen():
 		#self.setDynamicUI(self.cartData)
 		
 	def openMusicController(self):
-		
-		self.musiccontroller.play(1)
-		
+				
 		if self.musicframe_hidden:
 			self.musicframe_hidden = False
 			self.musicframe.lift(self.canvas)
@@ -236,6 +253,7 @@ class Screen():
 		else: 
 			self.musicframe_hidden = True
 			self.musicframe.lower(self.canvas)
+			
         
 	def clickEvent(self, event):
 		

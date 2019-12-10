@@ -18,6 +18,7 @@ class MusicController:
 	trackIndex = 0
 	
 	
+	
 	#Methods
 	def __init__(self, screen):
 		
@@ -40,7 +41,7 @@ class MusicController:
 		track = self.tracks[self.trackIndex]
 		
 		#Load and play new song
-		mixer.music.load(track + ".mp3")
+		mixer.music.load("Tracks/" + track + ".mp3")
 		mixer.music.play()
 		
 	def pause(self):
