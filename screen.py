@@ -171,9 +171,18 @@ class Screen():
 		
 		self.musiccanvas.config(scrollregion=(0,0,self.sWIDTH, len(self.musiccontroller.tracks)*80))
 		
+		#Add up and down track navigation
+		upButtonImage = self.getImage("up-icon.png", 30, 30)
+		self.upButton = self.musiccanvas.create_image(self.sWIDTH * 0.75, self.sHEIGHT*0.05, image=upButtonImage)
+		self.musicframe.upButton = upButtonImage
+		
+		downButtonImage = self.getImage("down-icon.png", 30, 30)
+		self.downButton = self.musiccanvas.create_image(self.sWIDTH * 0.75, self.sHEIGHT*0.95, image=downButtonImage)
+		self.musicframe.downButton = downButtonImage
+		
 		#Track list menu		
+		self.trackIndexOffset = 3*5
 		for trackIndex in range(0, 5):
-			self.trackIndexOffset = 0*5
 			track = self.musiccontroller.trackNames[trackIndex+self.trackIndexOffset]
 			newButton = Button(self.musicframe, font=self.myFont, text=track,fg="white", bg="black", bd=2, command= lambda trackIndex = trackIndex+self.trackIndexOffset: self.musicButtonPressed(trackIndex), height=3, width=35, anchor="w")
 			newButton.place(x=self.sWIDTH*0.55, y=55+trackIndex*77)
@@ -202,6 +211,13 @@ class Screen():
 			else:
 				button.config(highlightbackground="white")
 				button.config(fg="white")
+				
+	def updateTrackList(self):
+		
+		#Track list menu		
+		for trackIndex in range(0, 5):
+			track = self.musiccontroller.trackNames[trackIndex+self.trackIndexOffset]
+			self.musiccanvas.itemconfig(self.trackButtons[trackIndex], text=track)
 		
 	def setDynamicUI(self, cartData):
 		
@@ -319,6 +335,9 @@ class Screen():
 		prevButtonBounds = self.musiccanvas.bbox(self.prevButton)
 		nextButtonBounds = self.musiccanvas.bbox(self.nextButton)
 		
+		upButtonBounds = self.musiccanvas.bbox(self.upButton)
+		downButtonBounds = self.musiccanvas.bbox(self.downButton)
+		
 		#Check click trigger in frame
 		if x > exitButtonBounds[0] and x < exitButtonBounds[2] and y > exitButtonBounds[1] and y < exitButtonBounds[3] and self.musicframe_hidden == True:
 			self.__exit()
@@ -367,6 +386,14 @@ class Screen():
 				else:
 					button.config(highlightbackground="white")
 					button.config(fg="white")
+					
+		if x > upButtonBounds[0] and x < upButtonBounds[2] and y > upButtonBounds[1] and y < upButtonBounds[3] and self.musicframe_hidden == False:
+			self.trackIndexOffset -= 5
+			self.updateTrackList()
+			
+		if x > downButtonBounds[0] and x < downButtonBounds[2] and y > downButtonBounds[1] and y < downButtonBounds[3] and self.musicframe_hidden == False:
+			self.trackIndexOffset += 5
+			self.updateTrackList()
 			
 			
 	#MARK: Sys actions
