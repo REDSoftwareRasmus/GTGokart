@@ -39,7 +39,7 @@ class MusicController:
 		
 	trackIndex = 0
 	
-	
+	isPlaying = False
 	
 	#Methods
 	def __init__(self, screen):
@@ -66,15 +66,20 @@ class MusicController:
 		mixer.music.load("Tracks/" + track + ".mp3")
 		mixer.music.play()
 		
+		self.isPlaying = True
+		
 	def pause(self):
 		mixer.music.pause()
+		self.isPlaying = False
 	
 	def unpause(self):
 		mixer.music.unpause()
+		self.isPlaying = True
 		
 	def stop(self):
 		mixer.music.stop()
 		mixer.music.unload()
+		self.isPlaying = False
 		
 	def rewind(self):	
 		mixer.music.rewind()
@@ -82,7 +87,7 @@ class MusicController:
 	def playNext(self):
 		self.trackIndex += 1
 		
-		if trackIndex == len(tracks):
+		if self.trackIndex == len(self.tracks):
 			self.trackIndex = 0
 			
 		self.play(self.trackIndex)
@@ -90,13 +95,13 @@ class MusicController:
 	def playPrev(self):
 		
 		#Play previous if less than 5s into song, else rewind
-		if mixer.music.get_position() > 5000:
+		if mixer.music.get_pos() > 5000:
 			self.rewind()
 		else:
 			self.trackIndex -= 1
 			
-			if trackIndex == -1:
-				self.trackIndex = len(tracks) - 1
+			if self.trackIndex == -1:
+				self.trackIndex = len(self.tracks) - 1
 				
 			self.play(self.trackIndex)
 	
