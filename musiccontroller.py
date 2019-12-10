@@ -5,10 +5,10 @@ from pygame import mixer
 class MusicController:
 	
 	#Properties
-	tracks = ["stilldre.mp3",
-				"mario.mp3",
-				"chameleon.mp3",
-				"kungfu.mp3"]
+	tracks = ["stilldre",
+				"mario",
+				"chameleon",
+				"kungfu"]
 		
 	trackNames = ["Still Dre - Dr.Dre",
 					"Mario Kart Theme",
@@ -29,6 +29,10 @@ class MusicController:
 	def deinit(self):	
 		mixer.quit()
 	
+	def unload(self):
+		#mixer.music.unload()
+		pass
+	
 	def play(self, trackIndex):
 		
 		#Get song from index
@@ -36,7 +40,7 @@ class MusicController:
 		track = self.tracks[self.trackIndex]
 		
 		#Load and play new song
-		mixer.music.load(track)
+		mixer.music.load(track + ".mp3")
 		mixer.music.play()
 		
 	def pause(self):

@@ -31,7 +31,7 @@ class Screen():
 		self.sHEIGHT = self.root.winfo_screenheight()
 		
 		# Set fonts
-		self.myFont = tkFont.Font(root = self.root, family = "Beantown", size = 17, weight = "bold")
+		self.myFont = tkFont.Font(root = self.root, family = "Beantown", size = 20, weight = "bold")
 		self.velFont1 = tkFont.Font(root = self.root, family = "Beantown", size = 60, weight = "bold")
 		self.velFont2 = tkFont.Font(root = self.root, family = "Beantown", size = 20)
 		self.barFont1 = tkFont.Font(root = self.root, family = "Beantown", size = 17, weight = "bold")
@@ -42,6 +42,10 @@ class Screen():
 		self.__setupGUI(self.root)
 		
     
+    
+    
+    
+    #MARK: GUI SETUP
 	def __setupScreen(self, root):
 		pad = 3
 		self._geom = '200x200+0+0'
@@ -125,22 +129,26 @@ class Screen():
 		        
 		#Setup music controller
 		self.musicframe = Frame(self.root)
-		self.musiccanvas = Canvas(self.musicframe, width = self.sWIDTH*0.5, height = self.sHEIGHT, background='black')
+		self.musiccanvas = Canvas(self.musicframe, width = self.sWIDTH, height = self.sHEIGHT, background='black')
 		self.musiccanvas.pack(side="left")
-		self.canvas.create_window(self.sWIDTH*0.25,self.sHEIGHT*0.5,window=self.musicframe)
+		self.canvas.create_window(self.sWIDTH*0.5,self.sHEIGHT*0.5,window=self.musicframe)
 		self.musicframe.lower(self.canvas)
-        
-	#MARK: GUI Creation
-	def getImage(self, name, width, height, rotation=0):
-		pilImage = Image.open(name)
-		pilImage = pilImage.rotate(rotation)
-		pilImage = pilImage.resize((width, height), Image.ANTIALIAS)
-		image = ImageTk.PhotoImage(pilImage)
-		return image
+		
+		self.setupMusicController()
+		
+		
+	def setupMusicController(self):
+		
+		self.musicCloseButton = Button(self.musicframe, text="X", foreground="#ffffff", bd=0, command=self.openMusicController, font=self.myFont, bg="#000000", highlightthickness=0, highlightcolor="#ff0000")
+		self.musicCloseButton.place(x=10, y=10)
+		
+		for trackIndex in range(0, len(self.musiccontroller.tracks)):
+			track = self.musiccontroller.tracks[trackIndex]
+			#self.musiccontroller.unload()
+			newButton = Button(self.musicframe, text=track,fg="white", bg="black", bd=2, command= lambda: self.musiccontroller.play(trackIndex), height=2, width=10)
+			newButton.place(x=self.sWIDTH*0.75, y=50+trackIndex*70)
+			
   
-  
-  
-	#MARK: Actions
 	def setDynamicUI(self, cartData):
 		
 		#Get and calculate data
@@ -178,7 +186,17 @@ class Screen():
 		self.canvas.move(self.batteryLabel, 0, battery_Y_label)		
 		self.canvas.move(self.tempLabel, 0, temp_Y_label)
 		
-	
+		
+		
+	#MARK: Helper functions
+	def getImage(self, name, width, height, rotation=0):
+		pilImage = Image.open(name)
+		pilImage = pilImage.rotate(rotation)
+		pilImage = pilImage.resize((width, height), Image.ANTIALIAS)
+		image = ImageTk.PhotoImage(pilImage)
+		return image
+		
+	#MARK: Actions
 	def reverseButtonPressed(self):
 		
 		self.cartData['reverse'] = not self.cartData['reverse']
@@ -209,21 +227,15 @@ class Screen():
 		
 	def openMusicController(self):
 		
-		self.musiccontroller.play(0)
+		self.musiccontroller.play(1)
 		
 		if self.musicframe_hidden:
 			self.musicframe_hidden = False
-			self.musiccontroller.unpause()
 			self.musicframe.lift(self.canvas)
 			
 		else: 
-			self.closeMusicController()
-			self.musiccontroller.pause()
-			
-	def closeMusicController(self):
-		self.musicframe_hidden = True
-		self.musicframe.lower(self.canvas)
-		
+			self.musicframe_hidden = True
+			self.musicframe.lower(self.canvas)
         
 	def clickEvent(self, event):
 		
@@ -247,6 +259,10 @@ class Screen():
 			
 		if x > radioButtonBounds[0] and x < radioButtonBounds[2] and y > radioButtonBounds[1] and y < radioButtonBounds[3]:
 			self.openMusicController()
+			
+			
+			
+			
 			
        
 	#MARK: Sys actions
