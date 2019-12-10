@@ -133,14 +133,7 @@ class Screen():
 		self.musicframe = Frame(self.root, width = self.sWIDTH, height = self.sHEIGHT)
 		self.musiccanvas = Canvas(self.musicframe, width = self.sWIDTH, height = self.sHEIGHT, background='black', scrollregion=(0,0,0,self.sHEIGHT*2))
 		
-		musicscrollbar = Scrollbar(self.musicframe, orient=VERTICAL)
-		musicscrollbar.pack(side=RIGHT, fill=Y)
-		musicscrollbar.config(command=self.musiccanvas.yview)
-		
-		self.musiccanvas.config(yscrollcommand = musicscrollbar.set)
 		self.musiccanvas.pack()
-		
-		self.musiccanvas.create_rectangle((200,300,300,600))	
 			
 		self.musicframe.lower(self.canvas)	
 		self.musicframe.pack()
@@ -155,15 +148,19 @@ class Screen():
 		self.musicCloseButton = Button(self.musicframe, text="X", foreground="#ffffff", bd=0, command=self.openMusicController, font=self.closeFont, bg="#000000", highlightthickness=0, highlightcolor="#ff0000")
 		self.musicCloseButton.place(x=10, y=10)
 		
+		#Music control buttons
+		
+		
 		self.musiccanvas.config(scrollregion=(0,0,self.sWIDTH, len(self.musiccontroller.tracks)*80))
 		
 		#Track list menu		
-		for trackIndex in range(0, len(self.musiccontroller.tracks)):
+		for trackIndex in range(0, 5):
 			track = self.musiccontroller.trackNames[trackIndex]
 			#self.musiccontroller.unload()
 			newButton = Button(self.musicframe, font=self.myFont, text=track,fg="white", bg="black", bd=2, command= lambda trackIndex = trackIndex: self.musicButtonPressed(trackIndex), height=3, width=35, anchor="w")
-			newButton.place(x=self.sWIDTH*0.55, y=30+trackIndex*77)
+			newButton.place(x=self.sWIDTH*0.55, y=55+trackIndex*77)
 			self.trackButtons.append(newButton)
+			
 			
 	def musicButtonPressed(self, trackIndex):
 		
