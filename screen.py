@@ -130,11 +130,21 @@ class Screen():
 		self.root.reverseButton = reverseButtonImage
 		        
 		#Setup music controller
-		self.musicframe = Frame(self.root)
-		self.musiccanvas = Canvas(self.musicframe, width = self.sWIDTH, height = self.sHEIGHT, background='black')
-		self.musiccanvas.pack(side="left")
+		self.musicframe = Frame(self.root, width = self.sWIDTH, height = self.sHEIGHT)
+		self.musiccanvas = Canvas(self.musicframe, width = self.sWIDTH, height = self.sHEIGHT, background='black', scrollregion=(0,0,0,self.sHEIGHT*2))
+		
+		musicscrollbar = Scrollbar(self.musicframe, orient=VERTICAL)
+		musicscrollbar.pack(side=RIGHT, fill=Y)
+		musicscrollbar.config(command=self.musiccanvas.yview)
+		
+		self.musiccanvas.config(yscrollcommand = musicscrollbar.set)
+		self.musiccanvas.pack()
+		
+		self.musiccanvas.create_rectangle((200,300,300,600))	
+			
+		self.musicframe.lower(self.canvas)	
+		self.musicframe.pack()
 		self.canvas.create_window(self.sWIDTH*0.5,self.sHEIGHT*0.5,window=self.musicframe)
-		self.musicframe.lower(self.canvas)
 		
 		self.setupMusicController()
 		
@@ -144,6 +154,8 @@ class Screen():
 		#Close button
 		self.musicCloseButton = Button(self.musicframe, text="X", foreground="#ffffff", bd=0, command=self.openMusicController, font=self.closeFont, bg="#000000", highlightthickness=0, highlightcolor="#ff0000")
 		self.musicCloseButton.place(x=10, y=10)
+		
+		self.musiccanvas.config(scrollregion=(0,0,self.sWIDTH, len(self.musiccontroller.tracks)*80))
 		
 		#Track list menu		
 		for trackIndex in range(0, len(self.musiccontroller.tracks)):

@@ -5,7 +5,7 @@ from pygame import mixer
 class MusicController:
 	
 	#Properties
-	tracks = ["stilldre", "mario", "chameleon", "kungfu", "allstar", "youdontknowme",
+	tracks = ["stilldre", "mario", "chameleon", "kungfu", "allstar",
 				"everybody", "badandboujee", "hypnotize", "livinonaprayer", 
 				"cinema", "turndownforwhat", "loseyourself", "elsonidito",
 				"dejavu", "milkshake", "flamingo", "canttouchthis", "compton",
@@ -17,7 +17,6 @@ class MusicController:
 					"Karma Chameleon - Culture Club",
 					"Kung Fu Fighting - Carl Douglas",
 					"All Star - Smash Mouth",
-					"You Don't Know Me - Matroda",
 					"Everybody - Backstreet Boys",
 					"Bad and Boujee - Migos",
 					"Hypnotize - Biggie Smalls",
