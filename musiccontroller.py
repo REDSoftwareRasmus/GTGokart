@@ -7,8 +7,10 @@ class MusicController:
 	#Properties
 	tracks = ["stilldre", "mario", "chameleon", "kungfu", "allstar", "youdontknowme",
 				"everybody", "badandboujee", "hypnotize", "livinonaprayer", 
-				"cinema", "turndownforwhat"
-				]
+				"cinema", "turndownforwhat", "loseyourself", "elsonidito",
+				"dejavu", "milkshake", "flamingo", "canttouchthis", "compton",
+				"lavidaloca", "riverside", "boneless", "tequila", "tokyodrift", 
+				"iceicebaby"]
 		
 	trackNames = ["Still Dre - Dr.Dre",
 					"Mario Kart Theme",
@@ -22,9 +24,19 @@ class MusicController:
 					"Livin' on a Prayer - Bon Jovi",
 					"Cinema - Skrillex",
 					"Turn down for what - DJ Snake",
-					
-					
-					]
+					"Lose Yourself - Eminem",
+					"El Sonidito - Hechizeros",
+					"Deja Vu - Initial D",
+					"Milkshake - Kelis",
+					"Flamingo - Kero Kero Bonito",
+					"U Can't touch this - MC Hammer",
+					"Straight Outta Compton - N.W.A",
+					"La Vida Loca - Ricky Martin",
+					"Riverside - Sidney Samson",
+					"Boneless - Steve Aoki", 
+					"Tequila - The Champs",
+					"Tokyo Drift - Teriyaki Boys",
+					"Ice Ice Baby - Vanilla Ice"]
 		
 	trackIndex = 0
 	
