@@ -172,7 +172,7 @@ class Screen():
 		
 		#Add up and down track navigation
 		upButtonImage = self.getImage("up-icon.png", 30, 30)
-		self.upButton = self.musiccanvas.create_image(self.sWIDTH * 0.75, self.sHEIGHT*0.05, image=upButtonImage)
+		self.upButton = self.musiccanvas.create_image(self.sWIDTH * 0.75, self.sHEIGHT*0.05, image=upButtonImage, state='hidden')
 		self.musicframe.upButton = upButtonImage
 		
 		downButtonImage = self.getImage("down-icon.png", 30, 30)
@@ -299,7 +299,7 @@ class Screen():
 		self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[self.musiccontroller.trackIndex])
 			
 		#Update pause/play image
-		playButtonImage = self.getImage("play-icon.png", 70, 70)
+		playButtonImage = self.getImage("pause-icon.png", 70, 70)
 		self.musiccanvas.itemconfig(self.playButton, image=playButtonImage)
 		self.musicframe.playButton = playButtonImage	
 		
@@ -343,9 +343,16 @@ class Screen():
 		#Track list menu		
 		for trackIndex in range(0, 5):
 			track = self.musiccontroller.trackNames[trackIndex+self.trackIndexOffset]
-			self.trackButtons[trackIndex].config(text=track)
-			self.trackButtons[trackIndex].config(command= lambda trackIndex = trackIndex+self.trackIndexOffset: self.musicButtonPressed(trackIndex))			
-	
+			button = self.trackButtons[trackIndex]
+			button.config(text=track)
+			button.config(command=lambda trackIndex = trackIndex+self.trackIndexOffset: self.musicButtonPressed(trackIndex))			
+			
+			if trackIndex == (self.musiccontroller.trackIndex-self.trackIndexOffset):
+				button.config(highlightbackground=self.GKGreen)
+				button.config(fg=self.GKGreen)
+			else:
+				button.config(highlightbackground="white")
+				button.config(fg="white")
         
 	def clickEvent(self, event):
 		
@@ -384,19 +391,39 @@ class Screen():
 		if x > prevButtonBounds[0] and x < prevButtonBounds[2] and y > prevButtonBounds[1] and y < prevButtonBounds[3] and self.musicframe_hidden == False:
 			self.prevNextButtonPressed("prev")
 					
-		if x > upButtonBounds[0] and x < upButtonBounds[2] and y > upButtonBounds[1] and y < upButtonBounds[3] and self.musicframe_hidden == False:
+		try: 
+			if x > upButtonBounds[0] and x < upButtonBounds[2] and y > upButtonBounds[1] and y < upButtonBounds[3] and self.musicframe_hidden == False:
+				
+				if self.trackSegmentIndex != 0:
+					self.trackSegmentIndex -= 1
+					self.trackIndexOffset = self.trackSegmentIndex*5
+					
+					if self.trackSegmentIndex == 0:
+						self.musiccanvas.itemconfig(self.upButton, state='hidden')
+						
+					if self.trackSegmentIndex == 3:
+						self.musiccanvas.itemconfig(self.downButton, state='normal')
+					
+					self.updateTrackList()
+		except:
+			pass
 			
-			if self.trackSegmentIndex != 0:
-				self.trackSegmentIndex -= 1
-				self.trackIndexOffset = self.trackSegmentIndex*5
-				self.updateTrackList()
-			
-		if x > downButtonBounds[0] and x < downButtonBounds[2] and y > downButtonBounds[1] and y < downButtonBounds[3] and self.musicframe_hidden == False:
-			
-			if self.trackSegmentIndex != 4:
-				self.trackSegmentIndex += 1
-				self.trackIndexOffset = self.trackSegmentIndex*5				
-				self.updateTrackList()
+		try:
+			if x > downButtonBounds[0] and x < downButtonBounds[2] and y > downButtonBounds[1] and y < downButtonBounds[3] and self.musicframe_hidden == False:
+				
+				if self.trackSegmentIndex != 4:
+					self.trackSegmentIndex += 1
+					self.trackIndexOffset = self.trackSegmentIndex*5		
+					
+					if self.trackSegmentIndex == 1:
+						self.musiccanvas.itemconfig(self.upButton, state='normal')
+						
+					if self.trackSegmentIndex == 4:
+						self.musiccanvas.itemconfig(self.downButton, state='hidden')
+							
+					self.updateTrackList()
+		except:
+			pass
 			
 			
 	#MARK: Sys actions
