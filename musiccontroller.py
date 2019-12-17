@@ -60,9 +60,12 @@ class MusicController:
 	def play(self, trackIndex):
 		
 		#Get song from index
-		self.trackIndex = trackIndex
-		track = self.tracks[self.trackIndex]
-		
+		try: 
+			self.trackIndex = trackIndex
+			track = self.tracks[self.trackIndex]
+		except: 
+			return
+			
 		#Load and play new song
 		mixer.music.load("Tracks/" + track + ".mp3")
 		mixer.music.play()
