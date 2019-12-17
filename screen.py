@@ -12,6 +12,8 @@ class Screen():
 	#Properties
 	musicframe_hidden = True
 	trackButtons = []
+	trackSegmentIndex = 0
+	trackIndexOffset = trackSegmentIndex*5
 	
 	# MARK: Setup
 	def __init__(self, cartData, datacontroller, **kwargs):
@@ -44,9 +46,6 @@ class Screen():
 		self.__setupScreen(self.root)
 		self.__setupGUI(self.root)
 		
-    
-    
-    
     
     #MARK: GUI SETUP
 	def __setupScreen(self, root):
@@ -181,44 +180,13 @@ class Screen():
 		self.musicframe.downButton = downButtonImage
 		
 		#Track list menu		
-		self.trackIndexOffset = 3*5
 		for trackIndex in range(0, 5):
 			track = self.musiccontroller.trackNames[trackIndex+self.trackIndexOffset]
 			newButton = Button(self.musicframe, font=self.myFont, text=track,fg="white", bg="black", bd=2, command= lambda trackIndex = trackIndex+self.trackIndexOffset: self.musicButtonPressed(trackIndex), height=3, width=35, anchor="w")
 			newButton.place(x=self.sWIDTH*0.55, y=55+trackIndex*77)
 			self.trackButtons.append(newButton)
 			
-			
-	def musicButtonPressed(self, trackIndex):
-		
-		#Play track
-		self.musiccontroller.play(trackIndex)
-		
-		#Update track label
-		self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[trackIndex])
-		
-		#Update images
-		playButtonImage = self.getImage("pause-icon.png", 70, 70)
-		self.musiccanvas.itemconfig(self.playButton, image=playButtonImage)
-		self.musicframe.playButton = playButtonImage
-		
-		#Update gui for track selection
-		for buttonIndex in range(0, len(self.trackButtons)):
-			button = self.trackButtons[buttonIndex]
-			if buttonIndex == (trackIndex-self.trackIndexOffset):
-				button.config(highlightbackground=self.GKGreen)
-				button.config(fg=self.GKGreen)
-			else:
-				button.config(highlightbackground="white")
-				button.config(fg="white")
-				
-	def updateTrackList(self):
-		
-		#Track list menu		
-		for trackIndex in range(0, 5):
-			track = self.musiccontroller.trackNames[trackIndex+self.trackIndexOffset]
-			self.musiccanvas.itemconfig(self.trackButtons[trackIndex], text=track)
-		
+					
 	def setDynamicUI(self, cartData):
 		
 		#Get and calculate data
@@ -319,6 +287,65 @@ class Screen():
 			self.musiccontroller.pause()
 		else:
 			self.musiccontroller.unpause()
+			
+	def prevNextButtonPressed(self, option):
+		
+		if option == "next":
+			self.musiccontroller.playNext()
+		elif option == "prev":
+			self.musiccontroller.playPrev()
+			
+		#Update track label
+		self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[self.musiccontroller.trackIndex])
+			
+		#Update pause/play image
+		playButtonImage = self.getImage("play-icon.png", 70, 70)
+		self.musiccanvas.itemconfig(self.playButton, image=playButtonImage)
+		self.musicframe.playButton = playButtonImage	
+		
+		#Update gui for track selection
+		for buttonIndex in range(0, len(self.trackButtons)):
+			button = self.trackButtons[buttonIndex]
+			if buttonIndex == (self.musiccontroller.trackIndex-self.trackIndexOffset):
+				button.config(highlightbackground=self.GKGreen)
+				button.config(fg=self.GKGreen)
+			else:
+				button.config(highlightbackground="white")
+				button.config(fg="white")
+				
+				
+	def musicButtonPressed(self, trackIndex):
+		
+		#Play track
+		self.musiccontroller.play(trackIndex)
+		
+		#Update track label
+		self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[trackIndex])
+		
+		#Update images
+		playButtonImage = self.getImage("pause-icon.png", 70, 70)
+		self.musiccanvas.itemconfig(self.playButton, image=playButtonImage)
+		self.musicframe.playButton = playButtonImage
+		
+		#Update gui for track selection
+		for buttonIndex in range(0, len(self.trackButtons)):
+			button = self.trackButtons[buttonIndex]
+			if buttonIndex == (trackIndex-self.trackIndexOffset):
+				button.config(highlightbackground=self.GKGreen)
+				button.config(fg=self.GKGreen)
+			else:
+				button.config(highlightbackground="white")
+				button.config(fg="white")
+				
+				
+	def updateTrackList(self):
+		
+		#Track list menu		
+		for trackIndex in range(0, 5):
+			track = self.musiccontroller.trackNames[trackIndex+self.trackIndexOffset]
+			self.trackButtons[trackIndex].config(text=track)
+			self.trackButtons[trackIndex].config(command= lambda trackIndex = trackIndex+self.trackIndexOffset: self.musicButtonPressed(trackIndex))			
+	
         
 	def clickEvent(self, event):
 		
@@ -342,11 +369,9 @@ class Screen():
 		if x > exitButtonBounds[0] and x < exitButtonBounds[2] and y > exitButtonBounds[1] and y < exitButtonBounds[3] and self.musicframe_hidden == True:
 			self.__exit()
 			
-		
 		if x > reverseButtonBounds[0] and x < reverseButtonBounds[2] and y > reverseButtonBounds[1] and y < reverseButtonBounds[3] and self.musicframe_hidden == True:
 			self.reverseButtonPressed()    
-			
-			
+		
 		if x > radioButtonBounds[0] and x < radioButtonBounds[2] and y > radioButtonBounds[1] and y < radioButtonBounds[3] and self.musicframe_hidden == True:
 			self.openMusicController()
 			
@@ -354,46 +379,24 @@ class Screen():
 			self.pauseButtonPressed()
 			
 		if x > nextButtonBounds[0] and x < nextButtonBounds[2] and y > nextButtonBounds[1] and y < nextButtonBounds[3] and self.musicframe_hidden == False:
-			
-			self.musiccontroller.playNext()
-			
-			#Update track label
-			self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[self.musiccontroller.trackIndex])
-			
-			#Update gui for track selection
-			for buttonIndex in range(0, len(self.trackButtons)):
-				button = self.trackButtons[buttonIndex]
-				if buttonIndex == (self.musiccontroller.trackIndex-self.trackIndexOffset):
-					button.config(highlightbackground=self.GKGreen)
-					button.config(fg=self.GKGreen)
-				else:
-					button.config(highlightbackground="white")
-					button.config(fg="white")
+			self.prevNextButtonPressed("next")
 			
 		if x > prevButtonBounds[0] and x < prevButtonBounds[2] and y > prevButtonBounds[1] and y < prevButtonBounds[3] and self.musicframe_hidden == False:
-			
-			self.musiccontroller.playPrev()
-			
-			#Update track label
-			self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[self.musiccontroller.trackIndex])
-			
-			#Update gui for track selection
-			for buttonIndex in range(0, len(self.trackButtons)):
-				button = self.trackButtons[buttonIndex]
-				if buttonIndex == (self.musiccontroller.trackIndex-self.trackIndexOffset):
-					button.config(highlightbackground=self.GKGreen)
-					button.config(fg=self.GKGreen)
-				else:
-					button.config(highlightbackground="white")
-					button.config(fg="white")
+			self.prevNextButtonPressed("prev")
 					
 		if x > upButtonBounds[0] and x < upButtonBounds[2] and y > upButtonBounds[1] and y < upButtonBounds[3] and self.musicframe_hidden == False:
-			self.trackIndexOffset -= 5
-			self.updateTrackList()
+			
+			if self.trackSegmentIndex != 0:
+				self.trackSegmentIndex -= 1
+				self.trackIndexOffset = self.trackSegmentIndex*5
+				self.updateTrackList()
 			
 		if x > downButtonBounds[0] and x < downButtonBounds[2] and y > downButtonBounds[1] and y < downButtonBounds[3] and self.musicframe_hidden == False:
-			self.trackIndexOffset += 5
-			self.updateTrackList()
+			
+			if self.trackSegmentIndex != 4:
+				self.trackSegmentIndex += 1
+				self.trackIndexOffset = self.trackSegmentIndex*5				
+				self.updateTrackList()
 			
 			
 	#MARK: Sys actions
