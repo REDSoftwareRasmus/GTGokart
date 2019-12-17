@@ -10,7 +10,7 @@ class MusicController:
 				"cinema", "turndownforwhat", "loseyourself", "elsonidito",
 				"dejavu", "milkshake", "flamingo", "canttouchthis", "compton",
 				"lavidaloca", "riverside", "boneless", "tequila", "tokyodrift", 
-				"iceicebaby"]
+				"iceicebaby", "badbitch"]
 		
 	trackNames = ["Still Dre - Dr.Dre",
 					"Mario Kart Theme",
@@ -35,7 +35,8 @@ class MusicController:
 					"Boneless - Steve Aoki", 
 					"Tequila - The Champs",
 					"Tokyo Drift - Teriyaki Boys",
-					"Ice Ice Baby - Vanilla Ice"]
+					"Ice Ice Baby - Vanilla Ice",
+					"Bad Bitch - Chris Lorenzo"]
 		
 	trackIndex = 0
 	
