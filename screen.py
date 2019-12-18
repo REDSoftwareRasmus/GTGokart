@@ -276,6 +276,19 @@ class Screen():
 			self.musicframe_hidden = True
 			self.musicframe.lower(self.canvas)
 			
+	def setAlbumImage(self, index):
+		
+		track = self.musiccontroller.tracks[index]
+		
+		try:
+			albumImage = self.getImage("Album/" + track + ".png", 250, 250)
+		except:
+			albumImage = self.getImage("music-image.png", 250, 250)
+			print("Cant get album image for track ", track)
+			
+		self.musiccanvas.itemconfig(self.album, image=albumImage)
+		self.musicframe.albumImage = albumImage
+			
 	def pauseButtonPressed(self):
 	
 		imageName =  "play-icon.png" if self.musiccontroller.isPlaying else "pause-icon.png"
@@ -300,7 +313,10 @@ class Screen():
 			
 		#Update track label
 		self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[self.musiccontroller.trackIndex])
-			
+		
+		#Update album image
+		self.setAlbumImage(self.musiccontroller.trackIndex)
+		
 		#Update pause/play image
 		playButtonImage = self.getImage("pause-icon.png", 70, 70)
 		self.musiccanvas.itemconfig(self.playButton, image=playButtonImage)
@@ -324,6 +340,9 @@ class Screen():
 		
 		#Update track label
 		self.musiccanvas.itemconfigure(self.trackNameLabel, text=self.musiccontroller.trackNames[trackIndex])
+		
+		#Update album image
+		self.setAlbumImage(trackIndex)
 		
 		#Update images
 		playButtonImage = self.getImage("pause-icon.png", 70, 70)
