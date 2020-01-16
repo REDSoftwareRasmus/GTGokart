@@ -240,9 +240,10 @@ class Screen():
 	#MARK: Actions
 	def reverseButtonPressed(self):
 		
-		self.cartData['reverse'] = not self.cartData['reverse']
+		self.cartData[JSONKeys.reverse.value] = not self.cartData[JSONKeys.reverse.value]
 		
-		isReverse = self.cartData['reverse']
+		isReverse = self.cartData[JSONKeys.reverse.value]
+		outputPin = 17
 		
 		if isReverse:
 			reverseButtonImage = self.getImage("rev-button-on.gif", 300, 85)
@@ -250,7 +251,7 @@ class Screen():
 			self.root.reverseButton = reverseButtonImage
 			
 			# Set reverse signal HIGH
-			self.datacontroller.write(4, GPIO.HIGH)
+			self.datacontroller.write(outputPin, GPIO.HIGH)
 			
 		else:
 			reverseButtonImage = self.getImage("rev-button-off.gif", 300, 85)
@@ -258,7 +259,7 @@ class Screen():
 			self.root.reverseButton = reverseButtonImage
 		
 			# Set reverse signal LOW
-			self.datacontroller.write(4, GPIO.LOW)
+			self.datacontroller.write(outputPin, GPIO.LOW)
 		
 		#DEBUG/TEST
 		#self.cartData[JSONKeys.velocity.value] -= 15

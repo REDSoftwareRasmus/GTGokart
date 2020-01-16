@@ -12,6 +12,7 @@ class DataController():
 		
 		# Set GPIO pin numbering mode
 		GPIO.setmode(GPIO.BCM)
+		self.write(17, GPIO.LOW)
 		
 		# Setup Datastream from Arduino at ACM0 USB port
 		try: 
@@ -28,11 +29,16 @@ class DataController():
 		GPIO.setup(PIN, GPIO.OUT)
 		GPIO.output(PIN, SIGNAL)
 		
-		print(PIN, SIGNAL, "Changed status")
+		print(PIN, SIGNAL, "Changed status: ", GPIO.input(PIN))
 		
-    
-    
+	def readGPIO(self, PIN):
+		GPIO.setup(PIN, GPIO.OUT)
+		print("GPIO Pin ", PIN, " is ", GPIO.input(PIN))
+   
 	def getData(self):
+	
+		#Read GPIO
+		self.readGPIO(17)
 	
         #Observe data flag
 		observeData = True
@@ -68,6 +74,7 @@ class DataController():
 				#print(dataRange)
 				
 				try: 
+					print(str(dataRange))
 					jsonData = json.loads(str(dataRange))
 				except ValueError:
 					print("No JSON object could be loaded")
